@@ -1,0 +1,149 @@
+stock managment system
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+// Structure to represent a stock item
+struct StockItem {
+    int id;
+    string name;
+    int quantity;
+    double price;
+};
+
+// Function declarations
+void insertItem(StockItem stock[], int& itemCount, int maxItems);
+void updateItem(StockItem stock[], int itemCount);
+void displayStock(const StockItem stock[], int itemCount);
+void deleteItem(StockItem stock[], int& itemCount);
+
+int main() {
+    const int maxItems = 100;  // Maximum number of items in stock
+    StockItem stock[maxItems];
+    int itemCount = 0;
+
+    int choice;
+
+    do {
+        cout << "Stock Management System\n";
+        cout << "1. Insert Item\n";
+        cout << "2. Update Item\n";
+        cout << "3. Display Stock\n";
+        cout << "4. Delete Item\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                insertItem(stock, itemCount, maxItems);
+                break;
+            case 2:
+                updateItem(stock, itemCount);
+                break;
+            case 3:
+                displayStock(stock, itemCount);
+                break;
+            case 4:
+                deleteItem(stock, itemCount);
+                break;
+            case 5:
+                cout << "Exiting the program.\n";
+                break;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}
+
+// Function to insert a new item into the stock
+void insertItem(StockItem stock[], int& itemCount, int maxItems) {
+    if (itemCount < maxItems) {
+        StockItem newItem;
+        cout << "Enter item details:\n";
+        cout << "ID: ";
+        cin >> newItem.id;
+        cout << "Name: ";
+        cin.ignore(); // Clear the input buffer
+        getline(cin, newItem.name);
+        cout << "Quantity: ";
+        cin >> newItem.quantity;
+        cout << "Price: $";
+        cin >> newItem.price;
+
+        stock[itemCount++] = newItem;
+        cout << "Item successfully added to the stock.\n";
+    } else {
+        cout << "Stock is full. Cannot add more items.\n";
+    }
+}
+
+// Function to update an existing item in the stock
+void updateItem(StockItem stock[], int itemCount) {
+    int id;
+    cout << "Enter the ID of the item to update: ";
+    cin >> id;
+
+    bool found = false;
+    for (int i = 0; i < itemCount; ++i) {
+        if (stock[i].id == id) {
+            cout << "Enter new details for the item:\n";
+            cout << "Name: ";
+            cin.ignore();
+            getline(cin, stock[i].name);
+            cout << "Quantity: ";
+            cin >> stock[i].quantity;
+            cout << "Price: $";
+            cin >> stock[i].price;
+            found = true;
+            cout << "Item successfully updated.\n";
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Item with ID " << id << " not found.\n";
+    }
+}
+
+// Function to display the current stock
+void displayStock(const StockItem stock[], int itemCount) {
+    cout << setw(5) << "ID" << setw(20) << "Name" << setw(10) << "Quantity" << setw(10) << "Price" << endl;
+    cout << setfill('-') << setw(45) << "" << setfill(' ') << endl;
+
+    for (int i = 0; i < itemCount; ++i) {
+        cout << setw(5) << stock[i].id << setw(20) << stock[i].name << setw(10) << stock[i].quantity << setw(10) << fixed << setprecision(2) << stock[i].price << endl;
+    }
+}
+
+// Function to delete an item from the stock
+void deleteItem(StockItem stock[], int& itemCount) {
+    int id;
+    cout << "Enter the ID of the item to delete: ";
+    cin >> id;
+
+    int indexToDelete = -1;
+    for (int i = 0; i < itemCount; ++i) {
+        if (stock[i].id == id) {
+            indexToDelete = i;
+            break;
+        }
+    }
+
+    if (indexToDelete != -1) {
+        for (int i = indexToDelete; i < itemCount - 1; ++i) {
+            stock[i] = stock[i + 1];
+        }
+        itemCount--;
+        cout << "Item successfully deleted.\n";
+    } else {
+        cout << "Item with ID " << id << " not found.\n";
+    }
+}
+
